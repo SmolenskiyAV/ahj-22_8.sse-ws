@@ -1,0 +1,258 @@
+.content {
+  display: flex;
+  flex-flow: nowrap;
+  width: 100%;
+}
+
+button {
+  margin-right: 95px;
+  float: right;
+}
+
+/* ### ФОРМА POPUP "Изменить/Добавить/Удалить тикет" ### */
+.popup-wrapper {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.2);
+	display: flex;
+	z-index: 999; 
+}
+.popup {
+	width: 388px;
+	height: 240px;
+	margin: auto;
+	background-color: white;
+	z-index: 3;
+	padding-top: 40px;
+	position: relative;
+}
+
+.popup-title {
+  text-align: center;
+  margin: auto;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
+}
+
+.popup-title::after {
+  content: "";
+  display: block;
+  width: 70px;
+  height: 4px;
+  background: #b59f5b;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 0.3;
+}
+
+.popup_form {
+	display: flex;
+	flex-direction: column;
+	padding: 30px 30px 30px;
+	justify-content: space-between;
+	height: 90%;
+  
+}
+
+.popup-form-group {
+	font-size: 13px; 
+}
+
+.button-popup { 
+  border: none;
+  background-color: #b59f5b;
+  height: 45px;
+  font-family: inherit;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: white;
+  margin-bottom: 56px;
+  cursor: pointer;
+}
+
+.button-popup:hover { 
+  background-color: #323232;
+}
+
+.popup-title { 
+  text-align: center;
+  margin: auto;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: black;
+}
+.popup-title::after { 
+  content: "";
+  display: block;
+  width: 70px;
+  height: 4px;
+  background: #b59f5b;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  opacity: 0.3;
+}
+
+.popup-textarea { 
+	box-sizing: border-box;
+	background-color: #f9f9f9;
+	font-size: 20px;
+	width: 100%;
+	height: 50px;
+	resize: none;
+	padding: 20px;
+	margin-top: 5px;
+}
+
+.visually-hidden {
+  width: 1px;
+  height: 1px;
+  clip: rect(1px, 1px, 1px, 1px);
+  position: absolute;
+}
+
+.warning__banner {
+  font-size: 10px;
+  font-weight: bold;
+  color: red;
+}
+
+.display_none {
+  display: none;
+}
+/* -------------------------------------- */
+.chat-widget { 
+  position: fixed;
+  top: 5;
+  right: 0;
+  width: 75%;
+  height: 90%;
+}
+
+.user-widget { 
+  min-width: 35%;
+  height: 50%;
+  display: flex;
+  margin: 5px;
+}
+
+.chat-widget__area { 
+  position: relative;
+  width: 95%;
+  height: 80%;
+  border: 2px solid green;
+  border-width: 1px 0 0 1px;
+  border-radius: 20px;
+  background: #f0ffea;
+  flex-direction: column;
+  padding: 20px 5px 0 5px;
+  box-sizing: border-box;
+}
+
+.user-widget__area { 
+  display: flex;
+  position: relative;
+  width: 95%;
+  height: 80%;
+  border: 2px solid #7bbcc5;
+  border-width: 1px 0 0 1px;
+  border-radius: 20px 0px 0px 20px;
+  background: #eaffff;
+  flex-direction: column;
+  padding: 20px 5px 0 5px;
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+.user-widget__avatar {
+  border:1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  margin-left: 18px;
+}
+
+.user-widget__name {
+  height: 30px;
+  padding-top: 6px;
+  padding-left: 5px;
+}
+
+.you_user-widget__name {
+  color: red;
+}
+
+.chat-widget__area { 
+  display: flex;
+}
+
+.chat-widget__messages-container { 
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.message { 
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 60px;
+  position: relative
+}
+
+.upper_block { 
+  display: flex;
+  padding: 5px;
+  width: fit-content;
+  font-size: 14px;
+}
+
+.message_user { 
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.message__date { 
+  margin-left: 5px;
+  width: fit-content;
+}
+
+.message__text { 
+  display: flex;
+  padding: 5px;
+  background: #8eaa8e;
+  color: #fff;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.you_upper_block { 
+  position: absolute;
+  right: 0;
+  color: red;
+}
+
+.you_message__text { 
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.chat-widget__input { 
+  position: absolute;
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  bottom: 10px;
+  width: 90%;
+  bottom: -70px;
+}
