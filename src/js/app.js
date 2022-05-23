@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => { // помещаем addEve
         return;
       case 'SomeOne user abandoned us!': // "один из пользователей покинул чат"
 
-        userRemove(chatWidgetMessages, resivedId);
+        userRemove(resivedId);
         focusOnInput(chatWidgetInput);
         return;
 

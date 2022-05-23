@@ -1,11 +1,6 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-param-reassign */
-/* eslint-disable linebreak-style */
-/* eslint-disable no-plusplus */
 /* eslint-disable max-len */
-/* eslint-disable no-undef */
-/* eslint-disable linebreak-style */
-/* eslint-disable default-case */
 
 class WSMessage {
   constructor(type, userName, body) {
@@ -15,8 +10,8 @@ class WSMessage {
   }
 }
 
-export function userRemove(chatWidgetMessages, idValue) { // функция удаления пользователя из DOM
-  const element = chatWidgetMessages.getElementById(`${idValue}`);
+export function userRemove(idValue) { // функция удаления пользователя из DOM
+  const element = document.getElementById(`${idValue}`);
   element.remove();
 }
 
