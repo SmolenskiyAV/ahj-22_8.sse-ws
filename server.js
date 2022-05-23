@@ -1,11 +1,5 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable max-len */
-/* eslint-disable no-return-await */
-/* eslint-disable consistent-return */
-/* eslint-disable no-unreachable */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
 /* eslint-disable no-unused-vars */
 // const { timeStamp } = require('console');
 const http = require('http');
@@ -50,9 +44,15 @@ const chatStorage = [ // целевой массив данных сообщен
     name: 'Petr',
     message: 'I subscribed just for that &#128513; &#128513; &#128513;',
     created: '01:25 21.03.2019',
+  },
+  {
+    id: '61112924',
+    name: 'Ivan',
+    message: '&#128513;',
+    created: '01:29 21.03.2019',
   }];
 
-const chatUsers = [{ name: 'Alexandra' }, { name: 'Petr' }, { name: 'Ivan' }];
+const chatUsers = [{ name: 'Alexandra', id: '61112922' }, { name: 'Petr', id: '61112923' }, { name: 'Ivan', id: '61112924' }];
 
 let newMessage = {};
 
@@ -79,9 +79,9 @@ function pushResponse(ctx, value, dataArray = null) { // функция отпр
   }
 }
 
-function addMessageItem(nameValue, messageValue) { // функция добавления нового сообщения в целевой массив
+function addMessageItem(nameValue, messageValue, idValue) { // функция добавления нового сообщения в целевой массив
   const newItem = {
-    id: uuidv4(),
+    id: idValue,
     name: nameValue,
     message: messageValue,
     created: getTimeStamp(),
@@ -104,8 +104,11 @@ function delUserItem(index) { // функция удаления пользов�
   chatUsers.splice(index, 1);
 }
 
-function addUserItem(nameValue) { // функция добавления пользователя
-  const newUser = { name: nameValue };
+function addUserItem(nameValue, idValue) { // функция добавления пользователя
+  const newUser = {
+    name: nameValue,
+    id: idValue,
+  };
   chatUsers.push(newUser);
 }
 
@@ -149,12 +152,18 @@ function responseWS(ws, requestType, userName, messageBody, created, id) { // О
   }
 }
 
-wsServer.on('connection', (ws, req) => { // обработка забросов от клиента
-  let content = ''; // содержимое запроса, принятого от клиента
+const clients = new Set();
 
-  ws.on('message', (msg) => {
+wsServer.on('connection', (webSocket, req) => { // обработка забросов от клиента
+  const ws = webSocket;
+  clients.add(ws);
+  ws.id = uuidv4(); // идентификатор созданного ws-соединения(сокета)
+  console.log('===== New ws-connection started =====');
+  console.log(`Client with id ${ws.id} connected`);
+
+  function wsOnCallback(msg, client) { // callback-функция для приёма всех типов сообщений
     console.log('new request resived!');
-    content = JSON.parse(msg.toString());
+    const content = JSON.parse(msg.toString());
     const { type } = content;
     const { name } = content;
     const { body } = content;
@@ -165,41 +174,56 @@ wsServer.on('connection', (ws, req) => { // обработка забросов 
     switch (type) {
       case 'addName': // запрос клиента на подключение к Чату
         if (findUser(name) === null) {
-          addUserItem(name);
-          responseWS(ws, 'nameAdded', name);
+          addUserItem(name, ws.id);
+          responseWS(client, 'nameAdded', name);
           console.log('new name added!!!');
           console.log('*********************');
         } else {
-          responseWS(ws, 'invalidName', name);
+          responseWS(client, 'invalidName', name);
           console.log('name rejected!!!');
           console.log('*********************');
         }
         return;
       case 'allMessages': // запрос клиента на загрузку с сервера всех сообщений чата
-        responseWS(ws, 'allMessages', 'SERVER', JSON.stringify(chatStorage));
+        responseWS(client, 'allMessages', 'SERVER', JSON.stringify(chatStorage));
         console.log(`all chat-messages was pushed for user: ${name}`);
         console.log('*********************');
         return;
       case 'allUsers': // запрос клиента на загрузку с сервера всех сообщений чата
-        responseWS(ws, 'allUsers', 'SERVER', JSON.stringify(chatUsers));
+        responseWS(client, 'allUsers', 'SERVER', JSON.stringify(chatUsers));
         console.log(`all chat-users list was pushed for user: ${name}`);
         console.log('*********************');
         return;
       case 'addMessage': // запрос клиента на добавление в чат нового сообщения
-        addMessageItem(name, body);
-        responseWS(ws, 'new message added!', 'SERVER', JSON.stringify(newMessage));
+        addMessageItem(name, body, ws.id);
+        responseWS(client, 'new message added!', 'SERVER', JSON.stringify(newMessage));
         console.log(`user ${name} add new message`);
         console.log('*********************');
         return;
       default:
         console.log('fuckOff!');
     }
-  });
+  }
+
+  for (const client of clients) {
+    ws.on('message', (msg) => {
+      wsOnCallback(msg, client);
+    });
+  }
 
   responseWS(ws, 'helloClient', 'SERVER', 'welcome, Client ;)'); // первый ответ сервера клиенту при установлении ws-соединения
   console.log('==================');
   console.log('Connection established');
   console.log('==================');
+
+  ws.on('close', () => {
+    clients.delete(ws);
+  });
+
+  ws.on('disconnect', () => {
+    clients.splice(clients.indexOf(ws.id), 1);
+    console.log(`Client with id ${ws.id} disconnected`);
+  });
 });
 
 server.listen(port);
