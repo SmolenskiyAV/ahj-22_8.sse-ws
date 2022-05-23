@@ -102,12 +102,15 @@ function findUser(nameValue) { // функция поиска имени пол�
 
 function delUserItem(idValue) { // функция удаления пользователя (по известному id)
   let result = null;
+  let name = null;
   chatUsers.forEach((item, index) => {
     if (item.id === `${idValue}`) {
       result = index;
+      name = item.name;
     }
   });
   chatUsers.splice(result, 1);
+  return name;
 }
 
 function addUserItem(nameValue, idValue) { // функция добавления пользователя
@@ -149,7 +152,7 @@ function responseWS(ws, requestType, userName, messageBody, created, id) { // О
   packetName = new WSMessage(requestType, userName, messageBody, created, id);
   message = JSON.stringify(packetName);
 
-  if (requestType === 'new message added!') {
+  if ((requestType === 'new message added!') || (requestType === 'SomeOne user abandoned us!')) {
     Array.from(wsServer.clients) // сообщения всем подключенным клиентам
       .filter((o) => o.readyState === WS.OPEN)
       .forEach((o) => o.send(message, errCallback));
@@ -224,13 +227,15 @@ wsServer.on('connection', (webSocket, req) => { // обработка забро
 
   ws.on('close', () => {
     clients.delete(ws);
-    delUserItem(ws.id);
+    const currentName = delUserItem(ws.id);
+    responseWS(ws, 'SomeOne user abandoned us!', 'SERVER', `${currentName}`, timeStamp(), ws.id);
     console.log(`Client with id ${ws.id} close connection`);
   });
 
   ws.on('disconnect', () => {
     clients.splice(clients.indexOf(ws.id), 1);
-    delUserItem(ws.id);
+    const currentName = delUserItem(ws.id);
+    responseWS(ws, 'SomeOne user abandoned us!', 'SERVER', `${currentName}`, timeStamp(), ws.id);
     console.log(`Client with id ${ws.id} disconnected`);
   });
 });

@@ -15,11 +15,12 @@ class WSMessage {
   }
 }
 
-export function userRemove(element) { // функция удаления пользователя
-  element.parentElement.remove();
+export function userRemove(chatWidgetMessages, idValue) { // функция удаления пользователя из DOM
+  const element = chatWidgetMessages.getElementById(`${idValue}`);
+  element.remove();
 }
 
-export default function messageAdd(chatWidgetMessages, userNameValue, messageValue, timeStampValue) { // функция ДОБАВЛЕНИЯ СООБЩЕНИЯ в чат
+export default function messageAdd(chatWidgetMessages, userNameValue, messageValue, timeStampValue, idValue) { // функция ДОБАВЛЕНИЯ СООБЩЕНИЯ в чат
   let ownBlockMarker = '';
   let ownMessageMarker = '';
   let userName = userNameValue;
@@ -31,7 +32,7 @@ export default function messageAdd(chatWidgetMessages, userNameValue, messageVal
   }
 
   chatWidgetMessages.insertAdjacentHTML('beforeend', `
-    <div class="message">
+    <div class="message" id="${idValue}">
       <div class="upper_block${ownBlockMarker}">
         <div class="_message__user">${userName},</div>
         <div class="message__date">${timeStampValue}</div>

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => { // помещаем addEve
     const resivedName = content.name;
     const { body } = content;
     const resivedCreated = content.created;
-    const { id } = content;
+    const resivedId = content.id;
 
     switch (type) {
       case 'helloClient': // служебный ответ сервера
@@ -90,7 +90,8 @@ document.addEventListener('DOMContentLoaded', () => { // помещаем addEve
           const { name } = сhatUsers[u];
           const { message } = сhatUsers[u];
           const { created } = сhatUsers[u];
-          userAdd(userWidgetArea, name, message, created);
+          const { id } = сhatUsers[u];
+          userAdd(userWidgetArea, name, message, created, id);
           focusOnInput(chatWidgetInput);
         }
 
@@ -102,6 +103,12 @@ document.addEventListener('DOMContentLoaded', () => { // помещаем addEve
         const { created } = userFullMessage;
         messageAdd(chatWidgetMessages, name, message, created);
         return;
+      case 'SomeOne user abandoned us!': // "один из пользователей покинул чат"
+
+        userRemove(chatWidgetMessages, resivedId);
+        focusOnInput(chatWidgetInput);
+        return;
+
       default:
         console.log('fuckOff!');
     }
