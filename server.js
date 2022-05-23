@@ -225,6 +225,7 @@ wsServer.on('connection', (webSocket, req) => { // обработка забро
   ws.on('close', () => {
     clients.delete(ws);
     delUserItem(ws.id);
+    console.log(`Client with id ${ws.id} close connection`);
   });
 
   ws.on('disconnect', () => {
