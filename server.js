@@ -100,8 +100,14 @@ function findUser(nameValue) { // функция поиска имени пол�
   return result;
 }
 
-function delUserItem(index) { // функция удаления пользователя
-  chatUsers.splice(index, 1);
+function delUserItem(idValue) { // функция удаления пользователя (по известному id)
+  let result = null;
+  chatUsers.forEach((item, index) => {
+    if (item.id === `${idValue}`) {
+      result = index;
+    }
+  });
+  chatUsers.splice(result, 1);
 }
 
 function addUserItem(nameValue, idValue) { // функция добавления пользователя
@@ -218,10 +224,12 @@ wsServer.on('connection', (webSocket, req) => { // обработка забро
 
   ws.on('close', () => {
     clients.delete(ws);
+    delUserItem(ws.id);
   });
 
   ws.on('disconnect', () => {
     clients.splice(clients.indexOf(ws.id), 1);
+    delUserItem(ws.id);
     console.log(`Client with id ${ws.id} disconnected`);
   });
 });
